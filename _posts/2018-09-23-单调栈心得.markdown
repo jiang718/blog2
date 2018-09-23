@@ -1,0 +1,47 @@
+---
+layout: default 
+title: "单调栈心得"
+categories: [algorithm]
+tags: [stack, queue, leetcode]
+---
+
+<p>关于单调栈/队列的题，最后往往可以抽象为离当前操作值val最近的>(=)val或者<(=)val的值。</p>
+<p>如果是找离的最远的，可以转化为最近。比如查找最远的<=val的index，就能转化为找最近>val的值的index, 然后-1或+1（取决于哪个方向更靠近当前index）</p>
+<br/>
+<p>先说找>val的最近数值。</p>
+<p>假设Stack里存了两个index，i和j，i比较远，j离val的index近。那么如果我们还是选择了i对应的nums[i]，说明j对应的nums[j]太小了，只要nums[j]>=nums[i]，那肯定选j不选i，也就是说一个更大或相等的元素会把stack里已有的元素block掉，把这些没用的被blog的元素弹出，就会得到一个单调递减的栈。</p>
+<p>另外一种思维是确保栈里越新的元素符合条件希望越小（符合希望大的元素会block前面的元素）。</p>
+<p>若让>val的希望变小，只能单调减。</p>
+<br/>
+<p>那如果不是找>val 而是>=val呢，那相当于>val-1 (当栈顶元素=val时也符合条件）</p>
+<div>
+<div style="text-indext:2em;">
+<p>1）做法1</p>
+<p>还是单调递减，让<=val的元素出栈，只是弹出时多查看下弹出元素是否=val，若等于，立刻更新答案。</p>
+</div>
+<div style="text-indext:2em;">
+<p>2）做法2</p>
+<p>把单调递减改成单调不增，只弹出>val的，这样栈顶可能是一个=val的元素，这种做法会保留冗余元素，栈里可能有一排等于val的数值，其实只有最近的那个有效，但这个写法代码干净。</p>
+</div>
+</div>
+<br />
+
+
+<p>其他更复杂的情况：</p>
+<div>
+<div style="text-indext:2em;">
+<p>1）找最近的<val-k的，按’希望变小’原则，栈单调增。改用deque，从头取<val-k的元素，从尾巴插入val。</p>
+</div>
+
+<div style="text-indext:2em;">
+<p>2）找最近<val+k的，按’希望变小’原则，栈单调增，也就是>=val时弹出，弹出过程时可能出现符合条件的元素（跟前面讨论的>=val转化为>val-1的做法一致，>val-1可以看成>val-k的子情况，类似<val+k，都是弹出时解决)</p>
+</div>
+
+<div style="text-indext:2em;">
+<p>3)找<任意值，hmmm…目前只能想到单调栈上做binary search。</p>
+</div>
+</div>
+
+<br />
+<br />
+<p>{{ page.date | date_to_string }}</p>
